@@ -1,4 +1,8 @@
-# Getting Started with Vite
+# Shopping ReactJS Script
+
+This is an exercise is demonstrating various ways to build a shopping list in ReactJS.
+
+## Getting Started with Vite
 
 This project was switched to Vite.
 
