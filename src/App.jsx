@@ -79,11 +79,9 @@ function App() {
   }
 
   function handleProduceAdd() {
-    // add item
+
     item.id = uuidv4();
-    // console.log('item', item)
-    // let newProduce = [{ ...produce }];
-    // newProduce.push([item]);
+
     let newProduce = produce.concat(item);
     // console.log('shoppping newProduce', newProduce)
     const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
@@ -99,6 +97,11 @@ function App() {
     let newProd = produce.concat(item);
     setProduce(newProd);
     setShopData(sortedItems);
+    setItem({
+      category: '',
+      price: '',
+      name: '',
+    });
   }, [sortedItems]);
 
   return (
@@ -121,38 +124,39 @@ function App() {
       </ul>
       <hr />
       <div className="formSection">
-        <label>
-          Name:
-          <input
-            type="text"
-            onChange={handleNameChange}
-          />
-        </label>
-        <label>
-          Category:
-          <select onChange={handleCatChange}>
-            <option value="" key='50'>--Choose an option--</option>
-            <option value="Vegetables" key='51'>Vegetable</option>
-            <option value="Fruits" key='52'>Fruit</option>
-          </select>
-        </label>
-        <label>
-          Price:
-          <input
-            onChange={handlePriceChange}
-          />
-        </label>
+        <form>
+          <label>
+            Name:
+            <input
+              type="text"
+              onChange={handleNameChange}
+            />
+          </label>
+          <label>
+            Category:
+            <select onChange={handleCatChange}>
+              <option value="" key='50'>--Choose an option--</option>
+              <option value="Vegetables" key='51'>Vegetable</option>
+              <option value="Fruits" key='52'>Fruit</option>
+            </select>
+          </label>
+          <label>
+            Price:
+            <input type="number" required min="1"
+              onChange={handlePriceChange}
+            />
+          </label>
+          <button type="button" onClick={handleProduceAdd}>
+            Add Produce
+          </button>
+        </form>
       </div>
-      <button type="button" onClick={handleProduceAdd}>
-        Add Produce
-      </button>
-      <div>{item.name}, {item.price}</div>
       <ul>
         {produce.map((item) => (
-          <li key={item.id}>{item.name}</li>
+          <li key={item.id}>{item.name}&nbsp;<span>${item.price}</span><span>({item.category})</span></li>
         ))}
       </ul>
-    </div>
+    </div >
   );
 }
 
