@@ -50,27 +50,6 @@ function App() {
     setName(event.target.value);
   }
 
-  function handleNameChange(e) {
-    setItem({
-      ...item,
-      name: e.target.value
-    });
-  }
-
-  function handlePriceChange(e) {
-    setItem({
-      ...item,
-      price: e.target.value
-    });
-  }
-
-  function handleCatChange(e) {
-    setItem({
-      ...item,
-      category: e.target.value
-    });
-  }
-
   function handleAdd() {
     // add item
     const newList = shopData.concat({ name, price, category, id: uuidv4() });
@@ -78,14 +57,25 @@ function App() {
     setShopData(sortedNewList);
   }
 
-  function handleProduceAdd() {
+  const set = name => {
+    return ({ target: { value } }) => {
+      setItem(oldValues => ({ ...oldValues, [name]: value }));
+    }
+  };
 
-    item.id = uuidv4();
-
-    let newProduce = produce.concat(item);
-    // console.log('shoppping newProduce', newProduce)
-    const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-    setProduce(sortedNewProduce);
+  const onSubmit = async (event) => {
+    event.preventDefault(); // Prevent default submission
+    try {
+      item.id = uuidv4();
+      console.log('item to add', item)
+      console.log('current produce', produce)
+      let newProduce = produce.concat(item);
+      // console.log('shopping newProduce', newProduce)
+      const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      setProduce(sortedNewProduce);
+    } catch (e) {
+      alert(`Failed! ${e.message}`);
+    }
   }
 
   // Ensuring the key isn't a falsy value, or has null or undefined type.
@@ -97,11 +87,6 @@ function App() {
     let newProd = produce.concat(item);
     setProduce(newProd);
     setShopData(sortedItems);
-    setItem({
-      category: '',
-      price: '',
-      name: '',
-    });
   }, [sortedItems]);
 
   return (
@@ -124,17 +109,17 @@ function App() {
       </ul>
       <hr />
       <div className="formSection">
-        <form>
+        <form onSubmit={onSubmit}>
           <label>
             Name:
             <input
               type="text"
-              onChange={handleNameChange}
+              onChange={set('name')}
             />
           </label>
           <label>
             Category:
-            <select onChange={handleCatChange}>
+            <select onChange={set('category')}>
               <option value="" key='50'>--Choose an option--</option>
               <option value="Vegetables" key='51'>Vegetable</option>
               <option value="Fruits" key='52'>Fruit</option>
@@ -143,19 +128,22 @@ function App() {
           <label>
             Price:
             <input type="number" required min="1"
-              onChange={handlePriceChange}
+              onChange={set('price')}
             />
           </label>
-          <button type="button" onClick={handleProduceAdd}>
+          <button type="submit" >
             Add Produce
           </button>
         </form>
       </div>
-      <ul>
-        {produce.map((item) => (
-          <li key={item.id}>{item.name}&nbsp;<span>${item.price}</span><span>({item.category})</span></li>
-        ))}
-      </ul>
+      {produce.length > 0 ?
+        <ul>
+          {produce.map((item) => (
+            <li key={item.id}>{item.name}&nbsp;<span>${item.price}</span><span>({item.category})</span></li>
+          ))}
+        </ul>
+        : null
+      }
     </div >
   );
 }
