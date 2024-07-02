@@ -12,8 +12,8 @@
   margin-bottom: 20px;
 }
 
-.formSection input {
-  height: 40px;
+.formSection input, .formSection select {
+  height: 30px;
 }
 
 .formSection button {
@@ -30,9 +30,6 @@
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #efefef;
-}
-
-.shoppingItem{
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;

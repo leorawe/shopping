@@ -64,16 +64,16 @@ function App() {
     }
   };
 
-
+  const removeItem = (i) => {
+    const updatedList = produce.filter((item) => item.id !== i.id);
+    setProduce(updatedList);
+  }
 
   const onSubmit = async (event) => {
     event.preventDefault(); // Prevent default submission
     try {
       item.id = uuidv4();
-      console.log('item to add', item)
-      console.log('current produce', produce)
       let newProduce = produce.concat(item);
-      // console.log('shopping newProduce', newProduce)
       const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
       setProduce(sortedNewProduce);
     } catch (e) {
@@ -144,6 +144,9 @@ function App() {
           {produce.map((item) => (
             <li key={item.id}>
               <Item item={item}></Item>
+              <button
+                type="button"
+                onClick={() => removeItem(item)}>x</button>
             </li>
           ))}
         </ul>
