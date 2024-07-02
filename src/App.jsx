@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import Item from './Item'
 
 const shoppingItems = [
   {
@@ -62,6 +63,8 @@ function App() {
       setItem(oldValues => ({ ...oldValues, [name]: value }));
     }
   };
+
+
 
   const onSubmit = async (event) => {
     event.preventDefault(); // Prevent default submission
@@ -139,7 +142,9 @@ function App() {
       {produce.length > 0 ?
         <ul>
           {produce.map((item) => (
-            <li key={item.id}>{item.name}&nbsp;<span>${item.price}</span><span>({item.category})</span></li>
+            <li key={item.id}>
+              <Item item={item}></Item>
+            </li>
           ))}
         </ul>
         : null

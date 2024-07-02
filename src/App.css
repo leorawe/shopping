@@ -3,13 +3,44 @@
   width: 900px;
 }
 
-.formSection {
+.formSection form{
   display: flex;
   flex-direction: column;
 }
 
 .formSection label {
   margin-bottom: 20px;
+}
+
+.formSection input {
+  height: 40px;
+}
+
+.formSection button {
+  width: 200px;
+  height: 40px;
+}
+
+.App ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.App li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #efefef;
+}
+
+.shoppingItem{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  max-width: 900px;
+}
+
+.shoppingItem span {
+  margin-right: 10px;
 }
 
 @media (max-width: 900px) {
