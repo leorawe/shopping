@@ -41,23 +41,45 @@ function App() {
     setProduce(updatedList);
   }
 
+  const checkDuplicates = (i) => {
+    let noDup = true;
+    produce.map((existingItem) => {
+      if (existingItem.name === i.name) {
+        noDup = false;
+      }
+    });
+    return noDup;
+  }
+
   const onSubmit = async (event) => {
     event.preventDefault(); // Prevent default submission
     try {
       if (item.name != '') {
-        item.id = uuidv4();
-        let newProduce = produce.concat(item);
-        const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-        setProduce(sortedNewProduce);
-      }
-      setItem(
-        {
-          category: '',
-          price: '',
-          name: '',
-          id: uuidv4()
+        // Check for duplicates.
+        if (checkDuplicates(item)) {
+          item.id = uuidv4();
+          let newProduce = produce.concat(item);
+          const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+          setProduce(sortedNewProduce);
+          setItem(
+            {
+              category: '',
+              price: '',
+              name: '',
+              id: uuidv4()
+            })
         }
-      )
+        else {
+          alert('duplicate ' + item.name);
+          setItem(
+            {
+              category: '',
+              price: '',
+              name: '',
+              id: uuidv4()
+            })
+        }
+      }
     } catch (event) {
       alert(`Failed! ${event.message}`);
     }
