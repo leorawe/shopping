@@ -1,10 +1,16 @@
 import './App.css';
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Item from './Item'
 
 const fruitsVegetables =
   [
+    {
+      category: 'Fruit',
+      price: '3',
+      name: 'Watermelon',
+      id: 809
+    },
     { category: "Fruits", price: "1", name: "Apple", id: 1 },
     { category: "Fruits", price: "1", name: "Dragonfruit", id: 2 },
     { category: "Fruits", price: "2", name: "Passionfruit", id: 3 },
@@ -13,16 +19,17 @@ const fruitsVegetables =
     { category: "Vegetables", price: "1", name: "Peas", id: 6 }
   ]
 
-const watermelon = {
-  category: 'Fruit',
-  price: '3',
-  name: 'Watermelon',
-  id: 809
+const blankProduce = {
+  category: '',
+  price: '',
+  name: '',
+  id: uuidv4()
 }
 
 function App() {
-  const [item, setItem] = useState(watermelon);
-  const [produce, setProduce] = useState(fruitsVegetables);
+  const [item, setItem] = useState(blankProduce);
+  const sortedProduce = fruitsVegetables.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  const [produce, setProduce] = useState(sortedProduce);
   const set = name => {
     return ({ target: { value } }) => {
       setItem(oldValues => ({ ...oldValues, [name]: value }));
@@ -37,21 +44,24 @@ function App() {
   const onSubmit = async (event) => {
     event.preventDefault(); // Prevent default submission
     try {
-      item.id = uuidv4();
-      let newProduce = produce.concat(item);
-      const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-      setProduce(sortedNewProduce);
-    } catch (e) {
-      alert(`Failed! ${e.message}`);
+      if (item.name != '') {
+        item.id = uuidv4();
+        let newProduce = produce.concat(item);
+        const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        setProduce(sortedNewProduce);
+      }
+      setItem(
+        {
+          category: '',
+          price: '',
+          name: '',
+          id: uuidv4()
+        }
+      )
+    } catch (event) {
+      alert(`Failed! ${event.message}`);
     }
   }
-
-
-  useEffect(() => {
-    setProduce[{ ...produce }];
-    let newProd = produce.concat(item);
-    setProduce(newProd);
-  }, []);
 
   return (
     <div className="App">
@@ -65,21 +75,25 @@ function App() {
           <label>
             Name:
             <input
+              value={item.name}
               type="text"
               onChange={set('name')}
             />
           </label>
           <label>
             Category:
-            <select onChange={set('category')}>
-              <option value="" key='50'>--Choose an option--</option>
+            <select onChange={set('category')} value={item.category}>
+              <option value='' key='50'>--Choose an option--</option>
               <option value="Vegetables" key='51'>Vegetable</option>
               <option value="Fruits" key='52'>Fruit</option>
             </select>
           </label>
           <label>
             Price:
-            <input type="number" required min="1"
+            <input
+              type="number"
+              required min="1"
+              value={item.price}
               onChange={set('price')}
             />
           </label>
