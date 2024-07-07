@@ -28,7 +28,11 @@ const blankProduce = {
 
 function App() {
   const [item, setItem] = useState(blankProduce);
-  const sortedProduce = fruitsVegetables.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  const customSort = (a, b) => {
+    return (a.price - b.price)
+    // return ((a.name || "").localeCompare(b.name || ""))
+  }
+  const sortedProduce = fruitsVegetables.sort(customSort);
   const [produce, setProduce] = useState(sortedProduce);
   const set = name => {
     return ({ target: { value } }) => {
@@ -40,6 +44,8 @@ function App() {
     const updatedList = produce.filter((item) => item.id !== i.id);
     setProduce(updatedList);
   }
+
+
 
   const checkDuplicates = (i) => {
     let noDup = true;
@@ -59,7 +65,7 @@ function App() {
         if (checkDuplicates(item)) {
           item.id = uuidv4();
           let newProduce = produce.concat(item);
-          const sortedNewProduce = newProduce.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+          const sortedNewProduce = newProduce.sort(customSort);
           setProduce(sortedNewProduce);
           setItem(
             {
