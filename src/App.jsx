@@ -29,8 +29,12 @@ const blankProduce = {
 function App() {
   const [item, setItem] = useState(blankProduce);
   const customSort = (a, b) => {
-    return (a.price - b.price)
-    // return ((a.name || "").localeCompare(b.name || ""))
+    if (a.price === b.price) {
+      return ((a.name || "").localeCompare(b.name || ""))
+    }
+    else {
+      return (a.price - b.price)
+    }
   }
   const sortedProduce = fruitsVegetables.sort(customSort);
   const [produce, setProduce] = useState(sortedProduce);
