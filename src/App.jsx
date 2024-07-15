@@ -1,7 +1,8 @@
 import './App.css';
 import React, { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import Item from './Item'
+import Item from './Item';
+import { useFormik } from 'formik';
 
 const fruitsVegetables =
   [
@@ -27,7 +28,38 @@ const blankProduce = {
 }
 
 function App() {
-  const [item, setItem] = useState(blankProduce);
+  // Note that we have to initialize ALL of fields with values. These
+  // could come from props, but since we don’t want to prefill this form,
+  // we just use an empty string. If we don’t do this, React will yell
+  // at us.
+  const formik = useFormik({
+    initialValues: {
+      category: '',
+      price: '',
+      name: '',
+      id: uuidv4()
+    },
+    onSubmit: values => {
+      try {
+        if (values.name != '') {
+          // Check for duplicates.
+          if (checkDuplicates(values)) {
+            values.id = uuidv4();
+            let newProduce = produce.concat(values);
+            const sortedNewProduce = newProduce.sort(customSort);
+            console.log(sortedNewProduce)
+            setProduce(sortedNewProduce);
+          }
+          else {
+            alert('duplicate ' + values.name);
+          }
+        }
+      } catch (event) {
+        alert(`Failed! ${event.message}`);
+      }
+    },
+  });
+
   const customSort = (a, b) => {
     if (a.price === b.price) {
       return ((a.name || "").localeCompare(b.name || ""))
@@ -38,18 +70,11 @@ function App() {
   }
   const sortedProduce = fruitsVegetables.sort(customSort);
   const [produce, setProduce] = useState(sortedProduce);
-  const set = name => {
-    return ({ target: { value } }) => {
-      setItem(oldValues => ({ ...oldValues, [name]: value }));
-    }
-  };
 
   const removeItem = (i) => {
     const updatedList = produce.filter((item) => item.id !== i.id);
     setProduce(updatedList);
   }
-
-
 
   const checkDuplicates = (i) => {
     let noDup = true;
@@ -61,40 +86,6 @@ function App() {
     return noDup;
   }
 
-  const onSubmit = async (event) => {
-    event.preventDefault(); // Prevent default submission
-    try {
-      if (item.name != '') {
-        // Check for duplicates.
-        if (checkDuplicates(item)) {
-          item.id = uuidv4();
-          let newProduce = produce.concat(item);
-          const sortedNewProduce = newProduce.sort(customSort);
-          setProduce(sortedNewProduce);
-          setItem(
-            {
-              category: '',
-              price: '',
-              name: '',
-              id: uuidv4()
-            })
-        }
-        else {
-          alert('duplicate ' + item.name);
-          setItem(
-            {
-              category: '',
-              price: '',
-              name: '',
-              id: uuidv4()
-            })
-        }
-      }
-    } catch (event) {
-      alert(`Failed! ${event.message}`);
-    }
-  }
-
   return (
     <div className="App">
       <header>
@@ -103,30 +94,34 @@ function App() {
         </h1>
       </header>
       <div className="formSection">
-        <form onSubmit={onSubmit}>
-          <label>
+        <form onSubmit={formik.handleSubmit}>
+          <label htmlFor="name">
             Name:
             <input
-              value={item.name}
+              id="name"
+              name="name"
+              value={formik.values.name}
               type="text"
-              onChange={set('name')}
+              onChange={formik.handleChange}
             />
           </label>
-          <label>
+          <label htmlFor="category">
             Category:
-            <select onChange={set('category')} value={item.category}>
+            <select onChange={formik.handleChange} name="category" value={formik.values.category} type="text">
               <option value='' key='50'>--Choose an option--</option>
               <option value="Vegetables" key='51'>Vegetable</option>
               <option value="Fruits" key='52'>Fruit</option>
             </select>
           </label>
-          <label>
+          <label htmlFor="price">
             Price:
             <input
+              id="price"
+              name="price"
               type="number"
               required min="1"
-              value={item.price}
-              onChange={set('price')}
+              value={formik.values.price}
+              onChange={formik.handleChange}
             />
           </label>
           <button type="submit" >
