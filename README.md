@@ -1,6 +1,7 @@
 # Shopping ReactJS Script
 
 This is an exercise is demonstrating various ways to build a shopping list in ReactJS.
+It uses a Formik form. 
 
 ## Getting Started with Vite
 
